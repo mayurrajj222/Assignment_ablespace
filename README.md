@@ -1,97 +1,173 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Collaborative Task Manager
 
-# Getting Started
+A full-stack Task Management application built with modern JavaScript/TypeScript technologies.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## Tech Stack
 
-## Step 1: Start Metro
+### Frontend
+- **React** (via Vite) with TypeScript
+- **Tailwind CSS** for styling
+- **SWR** for data fetching and caching
+- **React Hook Form** with Zod validation
+- **Socket.io-client** for real-time updates
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+### Backend
+- **Node.js + Express** with TypeScript
+- **PostgreSQL** with Prisma ORM
+- **Socket.io** for real-time communication
+- **JWT** for authentication
+- **bcrypt** for password hashing
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+### Database Choice: PostgreSQL
+PostgreSQL was chosen for its:
+- ACID compliance ensuring data integrity
+- Strong typing system
+- Excellent performance for complex queries
+- Rich ecosystem and tooling support
+- Better suited for structured task management data
 
-```sh
-# Using npm
-npm start
+## Architecture Overview
 
-# OR using Yarn
-yarn start
+### Backend Architecture
+- **Controllers**: Handle HTTP requests and responses
+- **Services**: Contain business logic
+- **Repositories**: Data access layer using Prisma
+- **DTOs**: Input validation using Zod
+- **Middleware**: Authentication, error handling, logging
+
+### Frontend Architecture
+- **Components**: Reusable UI components
+- **Hooks**: Custom hooks for data fetching and state management
+- **Services**: API communication layer
+- **Types**: TypeScript interfaces and types
+
+## Real-Time Features
+Socket.io integration provides:
+- Live task updates across all connected clients
+- Instant assignment notifications
+- Real-time status and priority changes
+
+## Setup Instructions
+
+### Prerequisites
+- Node.js 18+
+- PostgreSQL 14+
+- npm or yarn
+
+### Backend Setup
+```bash
+cd backend
+npm install
+cp .env.example .env
+# Configure your database URL in .env
+npx prisma migrate dev
+npm run dev
 ```
 
-## Step 2: Build and run your app
-
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
+### Frontend Setup
+```bash
+cd frontend
+npm install
+npm run dev
 ```
 
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
+### Docker Setup (Bonus)
+```bash
+docker-compose up -d
 ```
 
-Then, and every time you update your native dependencies, run:
+## API Contract
 
-```sh
-bundle exec pod install
+### Authentication
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - User login
+- `POST /api/auth/logout` - User logout
+- `GET /api/auth/me` - Get current user
+
+### Tasks
+- `GET /api/tasks` - Get all tasks with filtering/sorting
+- `POST /api/tasks` - Create new task
+- `GET /api/tasks/:id` - Get task by ID
+- `PUT /api/tasks/:id` - Update task
+- `DELETE /api/tasks/:id` - Delete task
+
+### Users
+- `GET /api/users` - Get all users (for assignment)
+- `PUT /api/users/profile` - Update user profile
+
+## Design Decisions
+
+1. **JWT in HttpOnly Cookies**: Secure token storage preventing XSS attacks
+2. **Service Layer Pattern**: Clear separation of business logic from controllers
+3. **DTO Validation**: Input validation at API boundaries using Zod
+4. **Optimistic Updates**: Immediate UI feedback with SWR mutations
+5. **Socket.io Rooms**: Efficient real-time updates using room-based broadcasting
+
+## Trade-offs & Assumptions
+
+1. **Session Management**: JWT tokens expire in 24 hours for security
+2. **Real-time Scope**: Limited to task updates and assignments
+3. **File Uploads**: Not implemented to focus on core functionality
+4. **Pagination**: Implemented for task lists to handle large datasets
+5. **Caching**: SWR provides client-side caching with 5-minute stale time
+
+## Testing
+
+Backend unit tests cover:
+- Task creation validation
+- Authentication middleware
+- Socket.io event handling
+
+Run tests:
+```bash
+cd backend
+npm test
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+## Deployment
 
-```sh
-# Using npm
-npm run ios
+- **Frontend**: Deployed on Vercel
+- **Backend**: Deployed on Railway
+- **Database**: PostgreSQL on Railway
 
-# OR using Yarn
-yarn ios
+## Live URLs
+- Frontend: [Deploy to Vercel]
+- Backend API: [Deploy to Railway]
+
+## Quick Start with Docker
+
+1. Clone the repository
+2. Copy environment files:
+   ```bash
+   cp backend/.env.example backend/.env
+   cp frontend/.env.example frontend/.env
+   ```
+3. Start the application:
+   ```bash
+   docker-compose up -d
+   ```
+4. Run database migrations:
+   ```bash
+   docker-compose exec backend npx prisma migrate dev
+   ```
+5. Access the application at http://localhost:5173
+
+## Manual Setup
+
+### Backend Setup
+```bash
+cd backend
+npm install
+cp .env.example .env
+# Configure your PostgreSQL database URL in .env
+npx prisma migrate dev
+npm run dev
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
-
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
-
-## Step 3: Modify your app
-
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+### Frontend Setup
+```bash
+cd frontend
+npm install
+cp .env.example .env
+npm run dev
+```
