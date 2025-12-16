@@ -154,20 +154,53 @@ npm test
 
 ## Manual Setup
 
-### Backend Setup
+### Quick Setup (Recommended)
 ```bash
+npm run setup  # Sets up both frontend and backend
+npm run dev    # Starts both servers concurrently
+```
+
+### Individual Setup
+```bash
+# Backend Setup
 cd backend
 npm install
 cp .env.example .env
 # Configure your PostgreSQL database URL in .env
 npx prisma migrate dev
 npm run dev
-```
 
-### Frontend Setup
-```bash
+# Frontend Setup (new terminal)
 cd frontend
 npm install
 cp .env.example .env
 npm run dev
 ```
+
+## Deployment Instructions
+
+### Deploy Frontend to Vercel
+
+1. **Connect Repository**: Link your GitHub repository to Vercel
+2. **Configure Build Settings**:
+   - Framework Preset: `Vite`
+   - Root Directory: `frontend`
+   - Build Command: `npm run build`
+   - Output Directory: `dist`
+3. **Environment Variables**:
+   - `VITE_API_URL`: Your backend API URL (e.g., Railway URL)
+4. **Deploy**: Vercel will automatically deploy from the `frontend` directory
+
+### Deploy Backend to Railway
+
+1. **Connect Repository**: Link your GitHub repository to Railway
+2. **Configure Service**:
+   - Root Directory: `backend`
+   - Build Command: `npm run build`
+   - Start Command: `npm start`
+3. **Add PostgreSQL Database**: Railway will provide `DATABASE_URL`
+4. **Environment Variables**:
+   - `JWT_SECRET`: Generate a secure random string
+   - `NODE_ENV`: `production`
+   - `FRONTEND_URL`: Your Vercel frontend URL
+5. **Deploy**: Railway will build and deploy your backend

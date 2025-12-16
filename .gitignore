@@ -105,3 +105,6 @@ Thumbs.db
 
 # Prisma
 prisma/migrations/
+
+# React Native (moved to separate directory)
+react-native-app/

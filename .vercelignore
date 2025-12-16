@@ -1,0 +1,6 @@
+backend/
+react-native-app/
+node_modules/
+.git/
+.env
+*.log
